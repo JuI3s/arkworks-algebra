@@ -1,3 +1,4 @@
+use ark_algebra_test_templates::num_bigint::BigUint;
 use ark_ff::{fields::*, MontFp};
 
 use crate::bn254::*;
@@ -6,6 +7,21 @@ pub type Fq12 = Fp12<Fq12Config>;
 
 #[derive(Clone, Copy)]
 pub struct Fq12Config;
+
+// Implement the compression method in Proposition 1 of https://eprint.iacr.org/2007/429.pdf.
+#[derive(Clone, Copy)]
+pub struct CompressedFq12(pub (Fq, Fq));
+
+impl CompressedFq12 {
+    pub fn from_pow_of_fq3(alpha: Fq12) -> Self {
+        // Proposition 1 in https://eprint.iacr.org/2007/429.pdf.
+        let q3_minus_one = BigUint::from(Fq::MODULUS).pow(3) - BigUint::from(1);
+        // alpha ^ (q ^3 - 1)
+        let alpha_pow = alpha.pow(q3_minus_one.as_ref());
+
+        todo!()
+    }
+}
 
 impl Fp12Config for Fq12Config {
     type Fp6Config = Fq6Config;
